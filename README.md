@@ -1,6 +1,7 @@
 # arduino-omni-wheels
 Arduino Bluetooth Controlled Omni Wheels Car<br>
 This is Arduino-based,Bluetooth controlled RC car.IT is controlled by a Android smart phone application
+![hardware diagran](https://howtomechatronics.com/wp-content/uploads/2019/05/Arduino-Mecanum-Wheels-Robot-Circuit-Diagram-1024x576.png)
 
 Arduino Sketch code [>>> Click Here <<<](https://github.com/makertut/arduino-omni-wheels/blob/master/omni_wheels.ino "Arduino sketch")
 
@@ -20,3 +21,11 @@ Arduino Sketch code [>>> Click Here <<<](https://github.com/makertut/arduino-omn
 
 
 [![Maker Tutor](https://img.youtube.com/vi/6cvBGsf0GO8/0.jpg)](https://www.youtube.com/watch?v=Y6cvBGsf0GO8)
+
+
+## Thanks!
+* **howtomechatronics**: https://howtomechatronics.com/projects/arduino-mecanum-wheels-robot/
+
+
+## 🛒 shopping list
+https://docs.google.com/spreadsheets/d/1-4UnRc4MPios9moPcaZoS_eMhW0BuSpf3g8_CbpDmHk/edit#gid=0
