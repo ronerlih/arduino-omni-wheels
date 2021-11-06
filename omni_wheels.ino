@@ -4,6 +4,7 @@ SoftwareSerial Bluetooth(0, 10); // Arduino(RX, TX) - HC-05 Bluetooth (TX, RX)
 
 int bluetoothData;
 int isRunning = false;
+int batteryMonitorPin = 18;
 
 class Motor
 {
@@ -67,6 +68,9 @@ void setup()
    topLeft.setup();
    topRight.setup();
    pinMode(13, OUTPUT);
+
+   // battery monitor
+   pinMode(batteryMonitorPin, OUTPUT);
    // Turn off motors - Initial state
    stopAll();
 
@@ -91,12 +95,13 @@ void monitorBattery() {
  float voltage = sensorValue * (5.0 / 1023.00) * 3; // Convert the reading values from 5v to suitable 12V i
  Serial.println(voltage);
  // If voltage is below 11V turn on the LED
-//  if (voltage < 11) {
-//    digitalWrite(led, HIGH);
-//  }
-//  else {
-//    digitalWrite(led, LOW);
-//  }
+ if (voltage < 3) {
+   digitalWrite(batteryMonitorPin, LOW);
+ }
+ else {
+   digitalWrite(batteryMonitorPin, HIGH);
+ }
+ 
 }
 
 void recieveBluetooth()
