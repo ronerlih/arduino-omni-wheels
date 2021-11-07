@@ -1,11 +1,18 @@
+#define CUSTOM_SETTINGS
 
-#include <SoftwareSerial.h>
-SoftwareSerial Bluetooth(0, 10); // Arduino(RX, TX) - HC-05 Bluetooth (TX, RX)
+#define INCLUDE_TERMINAL_MODULE
+#include <Dabble.h>
+
+// #include <SoftwareSerial.h>
+// SoftwareSerial Bluetooth(0, 1); // Arduino(RX, TX) - HC-05 Bluetooth (TX, RX)
 
 int bluetoothData;
 int isRunning = false;
 int batteryMonitorPin = 18;
-
+int dataIn = 0;
+String Serialdata = "";
+bool dataflag = 0;
+bool recievedData = false;
 class Motor
 {
 private:
@@ -74,58 +81,84 @@ void setup()
    // Turn off motors - Initial state
    stopAll();
 
-   Serial.begin(9600);
-   Bluetooth.begin(9600); // Default baud rate of the Bluetooth module
-   Bluetooth.setTimeout(1);
+   // while (!Serial)
+   // {
+   //    ; // wait for serial port to connect. Needed for Native USB only
+   // }
+
+   Serial.begin(115200);
+   Dabble.begin(9600, 0, 1);
+   // Bluetooth.begin(9600); // Default baud rate of the Bluetooth module
+   // Bluetooth.println("Hello, world?");
 }
 void loop()
 
 {
-   recieveBluetooth();
-   monitorBattery();
 
-   if (isRunning)
-   {
-      runRoutine();
-   }
+   recieveBluetooth();
+   // monitorBattery();
+
+   // if (isRunning)
+   // {
+   //    runRoutine();
+   // }
 }
-void monitorBattery() {
+void monitorBattery()
+{
    //  // Monitor the battery voltage
- int sensorValue = analogRead(A0);
- float voltage = sensorValue * (5.0 / 1023.00) * 3; // Convert the reading values from 5v to suitable 12V i
- Serial.println(voltage);
- // If voltage is below 11V turn on the LED
- if (voltage < 3) {
-   digitalWrite(batteryMonitorPin, LOW);
- }
- else {
-   digitalWrite(batteryMonitorPin, HIGH);
- }
- 
+   int sensorValue = analogRead(A0);
+   float voltage = sensorValue * (5.0 / 1023.00) * 3; // Convert the reading values from 5v to suitable 12V i
+   Serial.println(voltage);
+   // If voltage is below 11V turn on the LED
+   if (voltage < 3)
+   {
+      digitalWrite(batteryMonitorPin, LOW);
+   }
+   else
+   {
+      digitalWrite(batteryMonitorPin, HIGH);
+   }
 }
 
 void recieveBluetooth()
 {
-   if (Bluetooth.available() > 0)
-   {
-      int dataIn = Bluetooth.read(); // Read the data
-      Bluetooth.write('thanks');
-      Serial.println(dataIn);
-      Serial.write('thanks');
+   Dabble.processInput();
+   while (Serial.available() != 0)
+  {
+    Serialdata = String(Serialdata + char(Serial.read()));
+    dataflag = 1;
+  }
+  if (dataflag == 1)
+  {
+    Terminal.print(Serialdata);
+    Serialdata = "";
+    dataflag = 0;
+  }
+  if(Terminal.available())
+  {
+    while (Terminal.available() != 0)
+    {
+      Serial.println(Terminal.read());
+    }
+    Serial.println();
+  }
 
-      if (dataIn != NULL)
-      {
-         // toggleRoutine();
+   //   Terminal.println(Terminal.available());
+   // dataIn = Terminal.read(); // Read the data
+   // Terminal.println(1111);
 
-         if(dataIn == 1) {
-            isRunning = true;
-         }
+   // if (dataIn != NULL && false)
+   // {
 
-         if(dataIn == 0) {
-            isRunning = false;
-         }
-      }
-   }
+   //    toggleRoutine();
+   //    // if(dataIn == 1) {
+   //    //    isRunning = true;
+   //    // }
+
+   //    // if(dataIn == 0) {
+   //    //    isRunning = false;
+   //    // }
+   // }
 }
 void toggleRoutine()
 {
