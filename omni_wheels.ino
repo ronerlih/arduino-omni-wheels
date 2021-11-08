@@ -3,7 +3,6 @@
 #define INCLUDE_TERMINAL_MODULE
 #define INCLUDE_GAMEPAD_MODULE
 
-
 #include <Dabble.h>
 
 // #include <SoftwareSerial.h>
@@ -100,7 +99,6 @@ void loop()
 
    recieveBluetooth();
    // monitorBattery();
-
    // if (isRunning)
    // {
    //    runRoutine();
@@ -126,56 +124,68 @@ void monitorBattery()
 void recieveBluetooth()
 {
    Dabble.processInput();
- if (GamePad.isUpPressed())
-  {
-    Serial.print("UP");
-  }
+   if (GamePad.isUpPressed())
+   {
+      Serial.print("UP");
+      forward();
+      ascendSpeed();
+   }
 
-  if (GamePad.isDownPressed())
-  {
-    Serial.print("DOWN");
-  }
+   else if (GamePad.isDownPressed())
+   {
+      Serial.print("DOWN");
+      backward();
+      ascendSpeed();
+   }
 
-  if (GamePad.isLeftPressed())
-  {
-    Serial.print("Left");
-  }
+   else if (GamePad.isLeftPressed())
+   {
+      Serial.print("Left");
+      left();
+      ascendSpeed();
+   }
 
-  if (GamePad.isRightPressed())
-  {
-    Serial.print("Right");
-  }
+   else if (GamePad.isRightPressed())
+   {
+      Serial.print("Right");
+      right();
+      ascendSpeed();
+   }
+   else if (GamePad.isSquarePressed())
+   {
+      Serial.print("Square");
+   }
 
-  if (GamePad.isSquarePressed())
-  {
-    Serial.print("Square");
-  }
+   else if (GamePad.isCirclePressed())
+   {
+      Serial.print("Circle");
+   }
 
-  if (GamePad.isCirclePressed())
-  {
-    Serial.print("Circle");
-  }
+   else if (GamePad.isCrossPressed())
+   {
+      Serial.print("Cross");
+   }
 
-  if (GamePad.isCrossPressed())
-  {
-    Serial.print("Cross");
-  }
+   else if (GamePad.isTrianglePressed())
+   {
+      Serial.print("Triangle");
+   }
 
-  if (GamePad.isTrianglePressed())
-  {
-    Serial.print("Triangle");
-  }
+   else if (GamePad.isStartPressed())
+   {
+      Serial.print("Start");
+   }
 
-  if (GamePad.isStartPressed())
-  {
-    Serial.print("Start");
-  }
-
-  if (GamePad.isSelectPressed())
-  {
-    Serial.print("Select");
-  }
-  Serial.print('\t');
+   else if (GamePad.isSelectPressed())
+   {
+      Serial.print("Select");
+   }
+   else
+   {
+      Serial.print('\t');
+      decendSpeed();
+      stopAll();
+   }
 
    //   Terminal.println(Terminal.available());
    // dataIn = Terminal.read(); // Read the data
@@ -409,6 +419,24 @@ void ascendDescendSpeed()
       topRight.setSpeed(i);
       delay(30);
    }
+}
+void ascendSpeed()
+{
+   // Accelerate from zero to maximum speed
+ 
+      bottomLeft.setSpeed(100);
+      bottomRight.setSpeed(100);
+      topLeft.setSpeed(100);
+      topRight.setSpeed(100);
+}
+void decendSpeed()
+{
+   // Deccelerate from maximum speed to zero
+ 
+      bottomLeft.setSpeed(0);
+      bottomRight.setSpeed(0);
+      topLeft.setSpeed(0);
+      topRight.setSpeed(0);
 }
 // control spinning direction of motors
 void directionControl()
