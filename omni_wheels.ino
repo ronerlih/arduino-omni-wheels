@@ -1,6 +1,9 @@
 #define CUSTOM_SETTINGS
 
 #define INCLUDE_TERMINAL_MODULE
+#define INCLUDE_GAMEPAD_MODULE
+
+
 #include <Dabble.h>
 
 // #include <SoftwareSerial.h>
@@ -123,25 +126,56 @@ void monitorBattery()
 void recieveBluetooth()
 {
    Dabble.processInput();
-   while (Serial.available() != 0)
+ if (GamePad.isUpPressed())
   {
-    Serialdata = String(Serialdata + char(Serial.read()));
-    dataflag = 1;
+    Serial.print("UP");
   }
-  if (dataflag == 1)
+
+  if (GamePad.isDownPressed())
   {
-    Terminal.print(Serialdata);
-    Serialdata = "";
-    dataflag = 0;
+    Serial.print("DOWN");
   }
-  if(Terminal.available())
+
+  if (GamePad.isLeftPressed())
   {
-    while (Terminal.available() != 0)
-    {
-      Serial.println(Terminal.read());
-    }
-    Serial.println();
+    Serial.print("Left");
   }
+
+  if (GamePad.isRightPressed())
+  {
+    Serial.print("Right");
+  }
+
+  if (GamePad.isSquarePressed())
+  {
+    Serial.print("Square");
+  }
+
+  if (GamePad.isCirclePressed())
+  {
+    Serial.print("Circle");
+  }
+
+  if (GamePad.isCrossPressed())
+  {
+    Serial.print("Cross");
+  }
+
+  if (GamePad.isTrianglePressed())
+  {
+    Serial.print("Triangle");
+  }
+
+  if (GamePad.isStartPressed())
+  {
+    Serial.print("Start");
+  }
+
+  if (GamePad.isSelectPressed())
+  {
+    Serial.print("Select");
+  }
+  Serial.print('\t');
 
    //   Terminal.println(Terminal.available());
    // dataIn = Terminal.read(); // Read the data
