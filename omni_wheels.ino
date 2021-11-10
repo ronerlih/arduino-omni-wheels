@@ -171,6 +171,9 @@ void recieveBluetooth()
    if (GamePad.isSquarePressed())
    {
       Serial.print("Square");
+      turnBottomLeft();
+      speed +=0.1;
+
    }
 
    if (GamePad.isCirclePressed())
@@ -181,6 +184,8 @@ void recieveBluetooth()
    if (GamePad.isCrossPressed())
    {
       Serial.print("Cross");
+      turnRear();
+      speed +=0.1;
    }
 
    if (GamePad.isTrianglePressed())
@@ -191,12 +196,15 @@ void recieveBluetooth()
    if (GamePad.isStartPressed())
    {
       Serial.print("Start");
+       turnInPositionRight();
+      speed +=0.1;
    }
 
    if (GamePad.isSelectPressed())
    {
       Serial.print("Select");
-     
+      turnInPositionLeft();
+      speed +=0.1;
    }
    if (
       GamePad.isSelectPressed() == 0 &&
@@ -215,14 +223,14 @@ void recieveBluetooth()
       {
          speed -= 5.0;
       }
-      else if (speed < 5 && speed > 0)
+      else if (speed < 5 && speed > 1)
       {
 
          speed -= 0.5;
       }
       else
       {
-         speed = 0.0;
+         speed = 1.0;
       }
    }
 
@@ -491,5 +499,13 @@ void directionControl()
 
 double easeOut(double x)
 {
-   return sin((x * PI) / 2.0);
+   return  sin((x * PI) / 2.0);
 }
+
+
+double BezierBlend(double x)
+{
+ return x * x * (3.0 - 2.0 * x) * 100;
+}
+
+
