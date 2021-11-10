@@ -15,6 +15,8 @@ int dataIn = 0;
 String Serialdata = "";
 bool dataflag = 0;
 bool recievedData = false;
+double speed = 1.0;
+
 class Motor
 {
 private:
@@ -98,12 +100,25 @@ void loop()
 {
 
    recieveBluetooth();
+   updateSpeed();
    // monitorBattery();
    // if (isRunning)
    // {
    //    runRoutine();
    // }
 }
+void updateSpeed()
+{
+   if(speed > 100) speed = 100.0;
+   if(speed < 0) speed = 0.0;
+   Serial.println(speed);
+   // Serial.println(easeOut(speed));
+   bottomLeft.setSpeed(speed);
+   bottomRight.setSpeed(speed);
+   topLeft.setSpeed(speed);
+   topRight.setSpeed(speed);
+}
+
 void monitorBattery()
 {
    //  // Monitor the battery voltage
@@ -124,85 +139,94 @@ void monitorBattery()
 void recieveBluetooth()
 {
    Dabble.processInput();
+   
    if (GamePad.isUpPressed())
    {
       Serial.print("UP");
       forward();
-      ascendSpeed();
+      speed++;
+
    }
 
-   else if (GamePad.isDownPressed())
+   if (GamePad.isDownPressed())
    {
       Serial.print("DOWN");
       backward();
-      ascendSpeed();
+      speed +=0.1;
    }
 
-   else if (GamePad.isLeftPressed())
+   if (GamePad.isLeftPressed())
    {
       Serial.print("Left");
       left();
-      ascendSpeed();
+      speed +=0.1;
    }
 
-   else if (GamePad.isRightPressed())
+   if (GamePad.isRightPressed())
    {
       Serial.print("Right");
       right();
-      ascendSpeed();
+      speed +=0.1;
    }
-   else if (GamePad.isSquarePressed())
+   if (GamePad.isSquarePressed())
    {
       Serial.print("Square");
    }
 
-   else if (GamePad.isCirclePressed())
+   if (GamePad.isCirclePressed())
    {
       Serial.print("Circle");
    }
 
-   else if (GamePad.isCrossPressed())
+   if (GamePad.isCrossPressed())
    {
       Serial.print("Cross");
    }
 
-   else if (GamePad.isTrianglePressed())
+   if (GamePad.isTrianglePressed())
    {
       Serial.print("Triangle");
    }
 
-   else if (GamePad.isStartPressed())
+   if (GamePad.isStartPressed())
    {
       Serial.print("Start");
    }
 
-   else if (GamePad.isSelectPressed())
+   if (GamePad.isSelectPressed())
    {
       Serial.print("Select");
+     
    }
-   else
-   {
-      Serial.print('\t');
-      decendSpeed();
-      stopAll();
+   if (
+      GamePad.isSelectPressed() == 0 &&
+      GamePad.isStartPressed() == 0 &&
+      GamePad.isUpPressed() == 0 &&
+      GamePad.isDownPressed() == 0 &&
+      GamePad.isLeftPressed() == 0 &&
+      GamePad.isRightPressed() == 0 &&
+      GamePad.isSquarePressed() == 0 &&
+      GamePad.isTrianglePressed() == 0 &&
+      GamePad.isCirclePressed() == 0 &&
+      GamePad.isCrossPressed() == 0 
+   ) {
+   Serial.print("STOP");
+      if (speed >= 5)
+      {
+         speed -= 5.0;
+      }
+      else if (speed < 5 && speed > 0)
+      {
+
+         speed -= 0.5;
+      }
+      else
+      {
+         speed = 0.0;
+      }
    }
 
-   //   Terminal.println(Terminal.available());
-   // dataIn = Terminal.read(); // Read the data
-   // Terminal.println(1111);
-
-   // if (dataIn != NULL && false)
-   // {
-
-   //    toggleRoutine();
-   //    // if(dataIn == 1) {
-   //    //    isRunning = true;
-   //    // }
-
-   //    // if(dataIn == 0) {
-   //    //    isRunning = false;
-   //    // }
-   // }
+   Serial.print('\n');
 }
 void toggleRoutine()
 {
@@ -309,10 +333,11 @@ void fullRoutine()
 }
 void stopAll()
 {
+   speed = 1;
    bottomLeft.stop();
    bottomRight.stop();
    topLeft.stop();
-   //  topLeft.stop();
+   topLeft.stop();
 }
 //
 //void zeroSpeed()
@@ -423,20 +448,20 @@ void ascendDescendSpeed()
 void ascendSpeed()
 {
    // Accelerate from zero to maximum speed
- 
-      bottomLeft.setSpeed(100);
-      bottomRight.setSpeed(100);
-      topLeft.setSpeed(100);
-      topRight.setSpeed(100);
+
+   bottomLeft.setSpeed(100);
+   bottomRight.setSpeed(100);
+   topLeft.setSpeed(100);
+   topRight.setSpeed(100);
 }
 void decendSpeed()
 {
    // Deccelerate from maximum speed to zero
- 
-      bottomLeft.setSpeed(0);
-      bottomRight.setSpeed(0);
-      topLeft.setSpeed(0);
-      topRight.setSpeed(0);
+
+   bottomLeft.setSpeed(0);
+   bottomRight.setSpeed(0);
+   topLeft.setSpeed(0);
+   topRight.setSpeed(0);
 }
 // control spinning direction of motors
 void directionControl()
@@ -462,4 +487,9 @@ void directionControl()
    //
    //   // Turn off motors
    stopAll();
+}
+
+double easeOut(double x)
+{
+   return sin((x * PI) / 2.0);
 }
